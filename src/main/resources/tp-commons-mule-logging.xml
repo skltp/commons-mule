@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule
+  xmlns="http://www.mulesoft.org/schema/mule/core"
+  xmlns:spring="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/core      http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-current.xsd
+">
+
+
+  <spring:beans>
+    <!--
+    Soi-toolkit custom logger.
+    Ref: https://code.google.com/p/soi-toolkit/wiki/UG_CustomizeLogging
+    -->
+    <spring:bean name="soitoolkit.eventLogger" class="se.skltp.commons.log.TpDefaultEventLogger" primary="true">
+      <spring:property name="jaxbContext" ref="jaxbContext"/>
+      <spring:property name="doLogToJms" value="${TP_DO_LOG_TO_JMS}"/>
+      <spring:property name="jmsInfoEventQueue" value="${SOITOOLKIT_LOG_INFO_QUEUE}"/>
+      <spring:property name="jmsErrorEventQueue" value="${SOITOOLKIT_LOG_ERROR_QUEUE}"/>
+    </spring:bean>
+  </spring:beans>
+
+</mule>
