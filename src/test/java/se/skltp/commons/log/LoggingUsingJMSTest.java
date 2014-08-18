@@ -28,7 +28,7 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 	// SOITOOLKIT_LOG_ERROR_QUEUE=SOITOOLKIT.LOG.ERROR
 	static final String SOITOOLKIT_LOG_INFO_QUEUE = "TP.LOG.INFO.QUEUE";
 	static final String SOITOOLKIT_LOG_ERROR_QUEUE = "TP.LOG.ERROR.QUEUE";
-	static final String TP_DO_LOG_TO_JMS_TRUE = "true";
+	//static final String TP_DO_LOG_TO_JMS_TRUE = "true";
 	static final String TP_DO_LOG_TO_JMS_FALSE = "false";
 	private AbstractJmsTestUtil jmsUtil = null;
 	protected int expectedNumberOfJMSInfoMessages = 2;
@@ -41,11 +41,11 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 
 		// set properties used in flow as system-properties (we are not using
 		// any properties file here)
-		System.setProperty("TP_DO_LOG_TO_JMS", TP_DO_LOG_TO_JMS_TRUE);
-		System.setProperty("SOITOOLKIT_LOG_INFO_QUEUE",
-				SOITOOLKIT_LOG_INFO_QUEUE);
-		System.setProperty("SOITOOLKIT_LOG_ERROR_QUEUE",
-				SOITOOLKIT_LOG_ERROR_QUEUE);
+		//System.setProperty("TP_DO_LOG_TO_JMS", TP_DO_LOG_TO_JMS_TRUE);
+		// clear property to make sure the default behaviour works as expected
+		System.clearProperty("TP_DO_LOG_TO_JMS");
+		System.setProperty("SOITOOLKIT_LOG_INFO_QUEUE", SOITOOLKIT_LOG_INFO_QUEUE);
+		System.setProperty("SOITOOLKIT_LOG_ERROR_QUEUE", SOITOOLKIT_LOG_ERROR_QUEUE);
 	}
 
 	protected String getConfigResources() {

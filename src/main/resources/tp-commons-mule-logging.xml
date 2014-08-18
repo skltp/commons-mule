@@ -8,7 +8,6 @@ http://www.mulesoft.org/schema/mule/core      http://www.mulesoft.org/schema/mul
 http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans-current.xsd
 ">
 
-
   <spring:beans>
     <!--
     Soi-toolkit custom logger.
@@ -16,9 +15,11 @@ http://www.springframework.org/schema/beans   http://www.springframework.org/sch
     -->
     <spring:bean name="soitoolkit.eventLogger" class="se.skltp.commons.log.TpDefaultEventLogger" primary="true">
       <spring:property name="jaxbContext" ref="jaxbContext"/>
-      <spring:property name="doLogToJms" value="${TP_DO_LOG_TO_JMS}"/>
-      <spring:property name="jmsInfoEventQueue" value="${SOITOOLKIT_LOG_INFO_QUEUE}"/>
-      <spring:property name="jmsErrorEventQueue" value="${SOITOOLKIT_LOG_ERROR_QUEUE}"/>
+      <!-- Set default values to keep old/classic behaviour and backwards compatibility without forcing configuration
+        in property files for new configuration capabilities -->
+      <spring:property name="doLogToJms" value="${TP_DO_LOG_TO_JMS:true}"/>
+      <spring:property name="jmsInfoEventQueue" value="${SOITOOLKIT_LOG_INFO_QUEUE:SOITOOLKIT.LOG.INFO}"/>
+      <spring:property name="jmsErrorEventQueue" value="${SOITOOLKIT_LOG_ERROR_QUEUE:SOITOOLKIT.LOG.ERROR}"/>
     </spring:bean>
   </spring:beans>
 

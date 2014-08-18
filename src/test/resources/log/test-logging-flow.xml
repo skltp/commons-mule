@@ -27,6 +27,37 @@
 		http://www.mulesoft.org/schema/mule/jbossts   http://www.mulesoft.org/schema/mule/jbossts/current/mule-jbossts.xsd
 		http://www.mulesoft.org/schema/mule/xml       http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd
 	">
+	
+
+  <!-- NOTE: need the PropertyPlaceholderConfigurer declared for default values to work, like: 
+    spring:property name="doLogToJms" value="${TP_DO_LOG_TO_JMS:true}"
+    If the PropertyPlaceholderConfigurer is not declared, the string "${TP_DO_LOG_TO_JMS:true}" is injected.
+  -->
+	<spring:bean
+		class="org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig"
+		id="environmentVariablesConfiguration">
+		<spring:property name="algorithm" value="PBEWithMD5AndDES" />
+		<spring:property name="passwordEnvName" value="SOITOOLKIT_ENCRYPTION_PASSWORD" />
+	</spring:bean><!-- 2. Support for decrypting encrypted properties -->
+	<spring:bean class="org.jasypt.encryption.pbe.StandardPBEStringEncryptor"
+		id="configurationEncryptor">
+		<spring:property name="config"
+			ref="environmentVariablesConfiguration" />
+	</spring:bean><!-- 3. Replacement for org.springframework.beans.factory.config.PropertyPlaceholderConfigurer 
+		that supports decrypting encrypted property values -->
+	<spring:bean
+		class="org.jasypt.spring.properties.EncryptablePropertyPlaceholderConfigurer"
+		id="propertyConfigurer">
+		<spring:constructor-arg ref="configurationEncryptor" />
+		<spring:property name="ignoreResourceNotFound" value="true" />
+		<spring:property name="locations">
+			<spring:list>
+				<spring:value>classpath:non-existing-config.properties</spring:value>
+				<spring:value>classpath:non-existing-config-override.properties</spring:value>
+			</spring:list>
+		</spring:property>
+	</spring:bean>
+
 
 	<spring:beans>
 		<!-- import the common logger config -->
