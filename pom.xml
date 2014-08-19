@@ -9,14 +9,14 @@
 
   <groupId>se.skltp.commons</groupId>
   <artifactId>tp-commons-mule</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>tp-commons-mule</name>
   
   <scm>
-    <connection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/tags/tp-commons-mule-1.0.0</connection>
-    <developerConnection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/tags/tp-commons-mule-1.0.0</developerConnection>
-    <url>https://skltp.googlecode.com/svn/tp/commons/commons-mule/tags/tp-commons-mule-1.0.0</url>
+    <connection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</connection>
+    <developerConnection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</developerConnection>
+    <url>https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</url>
   </scm>
   
   <dependencies>
