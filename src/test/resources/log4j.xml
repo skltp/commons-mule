@@ -75,8 +75,8 @@
 		<level value="INFO" />
 	</logger>
 	
-	<logger name="org.sample.sample1">
-		<level value="INFO" />
+	<logger name="se.skltp.commons.log">
+		<level value="DEBUG" />
 	</logger>
 
     <!-- Message logging using soi-toolkit LogTransformer class -->

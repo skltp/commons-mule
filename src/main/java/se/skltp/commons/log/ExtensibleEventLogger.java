@@ -28,6 +28,7 @@ public class ExtensibleEventLogger extends DefaultEventLogger {
 
 	@Override
 	public void setMuleContext(MuleContext muleContext) {
+		super.setMuleContext(muleContext);
 		this.muleContext = muleContext;
 	}
 

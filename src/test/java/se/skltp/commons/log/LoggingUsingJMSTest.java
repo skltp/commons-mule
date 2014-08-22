@@ -1,13 +1,17 @@
 package se.skltp.commons.log;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.jms.JMSException;
 
+import org.apache.log4j.PatternLayout;
+import org.apache.log4j.WriterAppender;
 import org.junit.Test;
 import org.mule.api.MuleMessage;
 import org.slf4j.Logger;
@@ -28,8 +32,11 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 	// SOITOOLKIT_LOG_ERROR_QUEUE=SOITOOLKIT.LOG.ERROR
 	static final String SOITOOLKIT_LOG_INFO_QUEUE = "TP.LOG.INFO.QUEUE";
 	static final String SOITOOLKIT_LOG_ERROR_QUEUE = "TP.LOG.ERROR.QUEUE";
-	//static final String TP_DO_LOG_TO_JMS_TRUE = "true";
+	// static final String TP_DO_LOG_TO_JMS_TRUE = "true";
 	static final String TP_DO_LOG_TO_JMS_FALSE = "false";
+	static final String TEST_MULE_SERVER_ID = "tp-commons-mule-server-id";
+	private StringWriter logWriter;
+	private WriterAppender log4jAppender;
 	private AbstractJmsTestUtil jmsUtil = null;
 	protected int expectedNumberOfJMSInfoMessages = 2;
 
@@ -41,11 +48,18 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 
 		// set properties used in flow as system-properties (we are not using
 		// any properties file here)
-		//System.setProperty("TP_DO_LOG_TO_JMS", TP_DO_LOG_TO_JMS_TRUE);
+		// System.setProperty("TP_DO_LOG_TO_JMS", TP_DO_LOG_TO_JMS_TRUE);
 		// clear property to make sure the default behaviour works as expected
 		System.clearProperty("TP_DO_LOG_TO_JMS");
-		System.setProperty("SOITOOLKIT_LOG_INFO_QUEUE", SOITOOLKIT_LOG_INFO_QUEUE);
-		System.setProperty("SOITOOLKIT_LOG_ERROR_QUEUE", SOITOOLKIT_LOG_ERROR_QUEUE);
+		System.setProperty("SOITOOLKIT_LOG_INFO_QUEUE",
+				SOITOOLKIT_LOG_INFO_QUEUE);
+		System.setProperty("SOITOOLKIT_LOG_ERROR_QUEUE",
+				SOITOOLKIT_LOG_ERROR_QUEUE);
+
+		// set mule server id (is done automatically in the context by Mule when
+		// doing a standalone deployment)
+		// Note: needed to secure that logs contain the serverId
+		System.setProperty("mule.serverId", TEST_MULE_SERVER_ID);
 	}
 
 	protected String getConfigResources() {
@@ -63,6 +77,13 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 	protected void doSetUp() throws Exception {
 		super.doSetUp();
 		doSetUpJms();
+		addLog4jAppenderForLogVerification();
+	}
+
+	@Override
+	protected void doTearDown() throws Exception {
+		super.doTearDown();
+		removeLog4jAppenderForLogVerification();
 	}
 
 	private void doSetUpJms() {
@@ -75,6 +96,25 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 		// Clear queues used for error handling
 		jmsUtil.clearQueues(SOITOOLKIT_LOG_INFO_QUEUE,
 				SOITOOLKIT_LOG_ERROR_QUEUE);
+	}
+
+	protected void addLog4jAppenderForLogVerification() throws Exception {
+		logWriter = new StringWriter();
+		PatternLayout layout = new PatternLayout("%d %-5p [%t] %-30c - %m%n");
+		log4jAppender = new WriterAppender(layout, logWriter);
+		org.apache.log4j.Logger.getRootLogger().addAppender(log4jAppender);
+	}
+
+	protected void removeLog4jAppenderForLogVerification() throws Exception {
+		org.apache.log4j.Logger.getRootLogger().addAppender(log4jAppender);
+	}
+
+	private void assertMuleServerIdIsPresentInLog() {
+		String logStr = logWriter.toString();
+		assertTrue("mule server id present",
+				logStr.contains("ComponentId=tp-commons-mule-server-id"));
+		assertFalse("mule server id not undefined",
+				logStr.contains("ComponentId=UNKNOWN.MULE_CONTEXT"));
 	}
 
 	@Test
@@ -100,6 +140,7 @@ public class LoggingUsingJMSTest extends AbstractTestCase {
 				input, (String) reply.getPayload());
 
 		assertLoggingQueues();
+		assertMuleServerIdIsPresentInLog();
 	}
 
 	private void assertLoggingQueues() {
