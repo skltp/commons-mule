@@ -12,13 +12,14 @@
   <version>1.0.2-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>tp-commons-mule</name>
-  
+
   <scm>
-    <connection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</connection>
-    <developerConnection>scm:svn:https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</developerConnection>
-    <url>https://skltp.googlecode.com/svn/tp/commons/commons-mule/trunk</url>
+    <url>http://github.com/skltp/commons-mule</url>
+    <connection>scm:git:git://github.com/skltp/commons-mule.git</connection>
+    <developerConnection>scm:git:git://github.com/skltp/commons-mule.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.soitoolkit.commons.components</groupId>
@@ -50,4 +51,23 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.5.1</version>
+            <configuration>
+                <autoVersionSubmodules>true</autoVersionSubmodules>
+                <tagNameFormat>v@{project.version}</tagNameFormat>
+                <pushChanges>false</pushChanges>
+                <localCheckout>true</localCheckout>
+            </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+  
 </project>
